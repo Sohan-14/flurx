@@ -2,32 +2,31 @@
 
 set -e
 
+# Detect OS and Arch
 OS=$(uname | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 
 if [[ "$OS" == "darwin" ]]; then
-    if [[ "$ARCH" == "arm64" ]]; then
-        BIN="flurx-macos-apple-silicon/flurx"
-    else
-        BIN="flurx-macos/flurx"
-    fi
+  if [[ "$ARCH" == "arm64" ]]; then
+    BIN="flurx-macos-apple-silicon/flurx"
+  else
+    BIN="flurx-macos/flurx"
+  fi
 elif [[ "$OS" == "linux" ]]; then
-    BIN="flurx-linux/flurx"
+  BIN="flurx-linux/flurx"
 elif [[ "$OS" == "windows_nt" ]] || [[ "$OS" == "mingw"* ]]; then
-    BIN="flurx-windows/flurx.exe"
+  BIN="flurx-windows/flurx.exe"
 else
-    echo "Unsupported OS: $OS"
-    exit 1
+  echo "Unsupported OS: $OS"
+  exit 1
 fi
 
-# URL to raw binary file on GitHub
 URL="https://raw.githubusercontent.com/sohan-14/flurx/main/fbinaries/$BIN"
+DEST="/usr/local/bin/flurx"
 
-# Download binary to /usr/local/bin/flurx
 echo "Downloading $BIN from $URL ..."
-curl -L "$URL" -o /usr/local/bin/flurx
+curl -L "$URL" -o "$DEST"
 
-# Make executable
-chmod +x /usr/local/bin/flurx
+chmod +x "$DEST"
 
-echo "✅ flurx installed successfully!"
+echo "✅ Installed flurx successfully at $DEST"
