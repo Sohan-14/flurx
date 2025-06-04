@@ -1,32 +1,37 @@
 #!/bin/bash
-
 set -e
 
-# Detect OS and Arch
 OS=$(uname | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 
 if [[ "$OS" == "darwin" ]]; then
-  if [[ "$ARCH" == "arm64" ]]; then
-    BIN="flurx-macos-apple-silicon/flurx"
+  if [[ "$ARCH" == "x86_64" ]]; then
+    BINARY_URL="https://raw.githubusercontent.com/sohan-14/flurx/main/fbinaries/flurx-macos-x86_64/flurx"
+  elif [[ "$ARCH" == "arm64" ]]; then
+    BINARY_URL="https://raw.githubusercontent.com/sohan-14/flurx/main/fbinaries/flurx-macos-apple-silicon/flurx"
   else
-    BIN="flurx-macos/flurx"
+    echo "Unsupported architecture on macOS: $ARCH"
+    exit 1
   fi
 elif [[ "$OS" == "linux" ]]; then
-  BIN="flurx-linux/flurx"
-elif [[ "$OS" == "windows_nt" ]] || [[ "$OS" == "mingw"* ]]; then
-  BIN="flurx-windows/flurx.exe"
+  if [[ "$ARCH" == "x86_64" ]]; then
+    BINARY_URL="https://raw.githubusercontent.com/sohan-14/flurx/main/fbinaries/flurx-linux-x86_64/flurx"
+  else
+    echo "Unsupported architecture on Linux: $ARCH"
+    exit 1
+  fi
+elif [[ "$OS" == "windows_nt" || "$OS" == "mingw64_nt" || "$OS" == "msys_nt" ]]; then
+  # Windows shell can be complicated; better provide PowerShell install script
+  echo "Windows detected. Please use PowerShell script to install."
+  exit 1
 else
   echo "Unsupported OS: $OS"
   exit 1
 fi
 
-URL="https://raw.githubusercontent.com/sohan-14/flurx/main/fbinaries/$BIN"
-DEST="/usr/local/bin/flurx"
+echo "Downloading flurx from $BINARY_URL ..."
 
-echo "Downloading $BIN from $URL ..."
-curl -L "$URL" -o "$DEST"
+curl -L -o /usr/local/bin/flurx "$BINARY_URL"
+chmod +x /usr/local/bin/flurx
 
-chmod +x "$DEST"
-
-echo "✅ Installed flurx successfully at $DEST"
+echo "flurx installed successfully!"
