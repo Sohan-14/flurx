@@ -2,7 +2,6 @@
 
 set -e
 
-# Detect OS and ARCH
 OS=$(uname | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 
@@ -21,13 +20,14 @@ else
     exit 1
 fi
 
-# Download or copy the binary from GitHub repo
-# If install.sh runs inside repo, copy; else download
-# For example, for GitHub raw URL:
-# curl -L "https://github.com/yourusername/flurx/releases/latest/download/$BIN" -o /usr/local/bin/flurx
+# URL to raw binary file on GitHub
+URL="https://raw.githubusercontent.com/sohan-14/flurx/main/fbinaries/$BIN"
 
-# For local copy (during testing):
-cp "fbinaries/$BIN" /usr/local/bin/flurx
+# Download binary to /usr/local/bin/flurx
+echo "Downloading $BIN from $URL ..."
+curl -L "$URL" -o /usr/local/bin/flurx
+
+# Make executable
 chmod +x /usr/local/bin/flurx
 
 echo "✅ flurx installed successfully!"
