@@ -22,7 +22,9 @@ elif [[ "$OS" == "linux" ]]; then
   fi
 elif [[ "$OS" == "windows_nt" || "$OS" == "mingw64_nt" || "$OS" == "msys_nt" ]]; then
   # Windows shell can be complicated; better provide PowerShell install script
-  echo "Windows detected. Please use PowerShell script to install."
+  echo "Windows detected. Please use the PowerShell install script:"
+  echo "Open PowerShell and run:"
+  echo "  iwr -useb https://raw.githubusercontent.com/sohan-14/flurx/main/install.ps1 | iex"
   exit 1
 else
   echo "Unsupported OS: $OS"
